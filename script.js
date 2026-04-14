@@ -1,4 +1,4 @@
-const API_KEY = "API key";
+const API_KEY = "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";
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 let historico = [];
@@ -93,6 +93,56 @@ async function chamarIA(mensagemInicial) {
   }
 }
 
+async function encerrarEntrevista() {
+  document.getElementById("tela-entrevista").style.display = "none";
+  document.getElementById("tela-feedback").style.display = "flex";
+  document.getElementById("conteudo-feedback").textContent = "Gerando seu feedback com Inteligência Artificial. Aguarde um momento...";
+
+  let transcricao = "";
+  for (let i = 1; i < historico.length; i++) {
+    const quemFalou = historico[i].role === "user" ? nomeUsuario : "Recrutadora";
+    transcricao += quemFalou + ": " + historico[i].content + "\n\n";
+  }
+
+  const promptFeedback =
+    "Você é um especialista em carreira. Leia a transcrição da entrevista abaixo e crie um feedback honesto.\n\n" +
+    "Siga exatamente este formato:\n" +
+    "🟢 PONTOS FORTES: (liste o que foi bom)\n" +
+    "🟡 O QUE MELHORAR: (liste onde o candidato errou ou foi vago)\n" +
+    "💡 DICAS: (dê 3 dicas práticas para o futuro)\n" +
+    "⭐ NOTA FINAL: (dê uma nota de 0 a 10 e explique em uma frase)\n\n" +
+    "Transcrição da entrevista:\n" + transcricao;
+
+  try {
+    const resposta = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile", // <-- AQUI TAMBÉM FOI ATUALIZADO
+        messages:[
+          { role: "user", content: promptFeedback }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (dados.error) {
+      throw new Error(dados.error.message);
+    }
+
+    document.getElementById("conteudo-feedback").textContent = dados.choices[0].message.content;
+
+  } catch (erro) {
+    document.getElementById("conteudo-feedback").textContent = "Não foi possível gerar o feedback: " + erro.message;
+  }
+}
+
 async function enviarMensagem() {
   const campo = document.getElementById("campo-resposta");
   const texto = campo.value.trim();
@@ -122,6 +172,13 @@ function adicionarMensagem(tipo, texto) {
 
   area.appendChild(linha);
   area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
+}
+
+function reiniciar() {
+  historico =[];
+  document.getElementById("tela-feedback").style.display = "none";
+  document.getElementById("tela-inicio").style.display = "flex";
+  document.getElementById("area-chat").innerHTML = "";
 }
 
 function mostrarDigitando() {
