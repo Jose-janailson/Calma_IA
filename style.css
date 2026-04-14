@@ -1,0 +1,249 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eefaee;
+    padding-top: 62px;
+}
+.nav-bar {
+    display: flex;
+    border: 1px solid #a1a1a1;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 1px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    background: #eefaee; 
+
+}
+.nav-bar .site-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+.left {
+    display: flex;
+    align-items: center;
+}
+.logo {
+    height: 40px;
+}
+.start-btn {
+    background-color: #22bb48;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    margin-right: 10px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+.start-btn:hover {
+    background-color: #1fb344;
+    transform: scale(1.1);
+}
+.hero-div {
+    height: calc(100vh - 62px);
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.hero-div h1 {
+    font-size: 75px;
+    padding-top: 80px;
+    margin: 0;
+    padding: 0;
+    padding-top: 40px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+.hero-div h1 span{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.texto-hero{
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+}
+.texto2 {
+    color: #22bb48;
+}
+.texto3 {
+    color: #63ff3c;
+}
+.buttons-div {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+.start-btn2 {
+    background-color: #22bb48;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-right: 10px;
+    font-weight: 400;
+    transition: 0.3s ease;
+    font-size: 30px;
+}
+.saibaMais-btn {
+    background-color: #ade0ba;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-weight: 400;
+    transition: 0.3s ease;
+    font-size: 28px;
+}
+.start-btn2:hover {
+    background-color: #1fb344;
+    transform: scale(1.1);
+}
+.saibaMais-btn:hover {
+    background-color: #9ed0a7;
+    transform: scale(1.1);
+}
+.hero-left {
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.hero-right {
+    max-width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero-right img {
+    max-width: 90%;
+    height: auto;
+    animation: float 5s ease-in-out infinite;
+}
+@keyframes float{
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+.pontos{
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    list-style: none;
+}
+.pontos li::before {
+    content: "•";
+    color: #22bb48;
+    font-size: 30px;
+    margin-right: 10px;
+}
+.pontos li {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+html {
+  scroll-behavior: smooth;
+}
+.info-section {
+  background: #eefaee;
+  padding: 80px 20px;
+  padding-top: 0;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.info-section h2 {
+  margin-top: 0;
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #22bb48;
+}
+
+.info-section p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 20px;
+  color: #333;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #22bb48;
+  font-size: 22px;
+}
+
+.card p {
+  margin: 0;
+  color: #444;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+@media (max-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .hero-div {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-left,
+  .hero-right {
+    max-width: 100%;
+  }
+
+  .hero-right img {
+    max-width: 80%;
+    margin-top: 20px;
+  }
+   .hero-div h1 {
+    font-size: 40px;
+  }
+}
