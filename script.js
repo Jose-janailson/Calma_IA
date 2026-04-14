@@ -6,7 +6,6 @@ let promptSistema = "";
 let aguardando = false;
 let nomeUsuario = "";
 
-// Centraliza a troca de telas para melhor organização (Engenharia de Software)
 function mudarTela(idTela) {
   const telas = ["tela-inicio", "tela-entrevista", "tela-feedback"];
   telas.forEach(tela => {
