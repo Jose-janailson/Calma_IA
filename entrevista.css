@@ -432,8 +432,6 @@ body {
   background: #1d4ed8;
 }
 
-/* Responsividade */
-
 @media (max-width: 600px) {
   .card-form {
     padding: 1.5rem;
@@ -442,4 +440,70 @@ body {
   .titulo {
     font-size: 1.8rem;
   }
+}
+
+#secao-historico {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #e0e0e0;
+  width: 100%;
+}
+
+#secao-historico h3 {
+  color: #22bb48;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+#lista-historico {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.item-historico {
+  background: #f9f9f9;
+  border-left: 4px solid #22bb48;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.item-historico.usuario {
+  border-left-color: #63ff3c;
+  background: #f0f8f0;
+}
+
+.item-historico .quem {
+  font-weight: 600;
+  color: #22bb48;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.item-historico.usuario .quem {
+  color: #63ff3c;
+}
+
+.item-historico .texto {
+  color: #333;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+#lista-historico::-webkit-scrollbar {
+  width: 8px;
+}
+
+#lista-historico::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#lista-historico::-webkit-scrollbar-thumb {
+  background: #22bb48;
+  border-radius: 10px;
 }

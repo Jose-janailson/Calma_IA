@@ -1,6 +1,5 @@
-const API_KEY = "Api Key";
+const API_KEY = "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";
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
-
 let historico = [];
 let promptSistema = "";
 let aguardando = false;
@@ -20,39 +19,37 @@ async function iniciarEntrevista() {
   const habilidades = document.getElementById("habilidades").value.trim();
   const tom = document.getElementById("tom").value;
   const msgErro = document.getElementById("msg-erro");
-
+  
   if (!nome || !vaga) {
     msgErro.style.display = "block";
     return;
   }
-
+  
   msgErro.style.display = "none";
   nomeUsuario = nome;
-
+  
   const estiloTom = {
     formal: "Use linguagem formal, profissional e objetiva.",
     tecnica: "Seja focado na parte técnica e faça perguntas difíceis da área.",
     startup: "Seja bem descontraído, amigável e focado em inovação."
   }[tom];
-
+  
   promptSistema = `Você é Ana, uma recrutadora experiente de RH.
 Candidato: ${nome}
 Vaga: ${vaga} (Nível: ${nivel})
 ${habilidades ? `Habilidades: ${habilidades}` : ""}
 Estilo: ${estiloTom}
-
 Regras:
 - Aja como humano.
 - No máximo 7 perguntas.
 - Uma pergunta por vez.
 - Sempre termine com uma pergunta clara até o encerramento.
 - Responda em Português do Brasil.`;
-
+  
   historico = [{ role: "system", content: promptSistema }];
   
   document.getElementById("area-chat").innerHTML = "";
   mudarTela("tela-entrevista");
-
   await chamarIA("Olá, cheguei para a entrevista.");
 }
 
@@ -62,7 +59,7 @@ async function chamarIA(mensagemInicial) {
   
   const idDigitando = mostrarDigitando();
   if (mensagemInicial) historico.push({ role: "user", content: mensagemInicial });
-
+  
   try {
     const resposta = await fetch(API_URL, {
       method: "POST",
@@ -76,14 +73,14 @@ async function chamarIA(mensagemInicial) {
         temperature: 0.7
       })
     });
-
+    
     const dados = await resposta.json();
     removerDigitando(idDigitando);
-
+    
     const textoResposta = dados.choices[0].message.content;
     adicionarMensagem("ia", textoResposta);
     historico.push({ role: "assistant", content: textoResposta });
-
+    
   } catch (erro) {
     removerDigitando(idDigitando);
     adicionarMensagem("ia", "Erro na conexão. Verifique sua internet ou API Key.");
@@ -97,13 +94,15 @@ async function encerrarEntrevista() {
   document.getElementById("tela-entrevista").style.display = "none";
   document.getElementById("tela-feedback").style.display = "flex";
   document.getElementById("conteudo-feedback").textContent = "Gerando seu feedback com Inteligência Artificial. Aguarde um momento...";
-
+  
+  mostrarHistorico();
+  
   let transcricao = "";
   for (let i = 1; i < historico.length; i++) {
     const quemFalou = historico[i].role === "user" ? nomeUsuario : "Recrutadora";
     transcricao += quemFalou + ": " + historico[i].content + "\n\n";
   }
-
+  
   const promptFeedback =
     "Você é um especialista em carreira. Leia a transcrição da entrevista abaixo e crie um feedback honesto.\n\n" +
     "Siga exatamente este formato:\n" +
@@ -112,7 +111,7 @@ async function encerrarEntrevista() {
     "💡 DICAS: (dê 3 dicas práticas para o futuro)\n" +
     "⭐ NOTA FINAL: (dê uma nota de 0 a 10 e explique em uma frase)\n\n" +
     "Transcrição da entrevista:\n" + transcricao;
-
+  
   try {
     const resposta = await fetch(API_URL, {
       method: "POST",
@@ -121,7 +120,7 @@ async function encerrarEntrevista() {
         "Authorization": "Bearer " + API_KEY
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile", // <-- AQUI TAMBÉM FOI ATUALIZADO
+        model: "llama-3.3-70b-versatile",
         messages:[
           { role: "user", content: promptFeedback }
         ],
@@ -129,15 +128,15 @@ async function encerrarEntrevista() {
         max_tokens: 1000
       })
     });
-
+    
     const dados = await resposta.json();
-
+    
     if (dados.error) {
       throw new Error(dados.error.message);
     }
-
+    
     document.getElementById("conteudo-feedback").textContent = dados.choices[0].message.content;
-
+    
   } catch (erro) {
     document.getElementById("conteudo-feedback").textContent = "Não foi possível gerar o feedback: " + erro.message;
   }
@@ -146,15 +145,15 @@ async function encerrarEntrevista() {
 async function enviarMensagem() {
   const campo = document.getElementById("campo-resposta");
   const texto = campo.value.trim();
-
+  
   if (!texto || aguardando) return;
-
+  
   campo.value = "";
   campo.style.height = "auto";
-
+  
   adicionarMensagem("usuario", texto);
   historico.push({ role: "user", content: texto });
-
+  
   await chamarIA(null);
 }
 
@@ -162,20 +161,20 @@ function adicionarMensagem(tipo, texto) {
   const area = document.getElementById("area-chat");
   const linha = document.createElement("div");
   linha.className = `linha-msg ${tipo === "usuario" ? "usuario" : ""}`;
-
+  
   const inicial = tipo === "usuario" ? (nomeUsuario[0] || "U").toUpperCase() : "A";
   
   linha.innerHTML = `
     <div class="mini-avatar ${tipo === "ia" ? "ia" : "user"}">${inicial}</div>
     <div class="balao ${tipo === "ia" ? "ia" : "usuario"}">${texto.replace(/\n/g, "<br>")}</div>
   `;
-
+  
   area.appendChild(linha);
   area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
 }
 
 function reiniciar() {
-  historico =[];
+  historico = [];
   document.getElementById("tela-feedback").style.display = "none";
   document.getElementById("tela-inicio").style.display = "flex";
   document.getElementById("area-chat").innerHTML = "";
@@ -187,6 +186,7 @@ function mostrarDigitando() {
   const linha = document.createElement("div");
   linha.className = "linha-msg";
   linha.id = id;
+  
   linha.innerHTML =
     '<div class="mini-avatar ia">A</div>' +
     '<div class="digitando">' +
@@ -194,6 +194,7 @@ function mostrarDigitando() {
       '<div class="ponto"></div>' +
       '<div class="ponto"></div>' +
     "</div>";
+  
   area.appendChild(linha);
   area.scrollTop = area.scrollHeight;
   return id;
@@ -216,4 +217,24 @@ function ajustarAltura(el) {
   el.style.height = Math.min(el.scrollHeight, 130) + "px";
 }
 
-
+function mostrarHistorico() {
+  const container = document.getElementById("lista-historico");
+  container.innerHTML = "";
+  
+  for (let i = 1; i < historico.length; i++) {
+    const mensagem = historico[i];
+    const ehUsuario = mensagem.role === "user";
+    
+    const item = document.createElement("div");
+    item.className = `item-historico ${ehUsuario ? "usuario" : ""}`;
+    
+    const quem = ehUsuario ? nomeUsuario : "Ana (Recrutadora)";
+    
+    item.innerHTML = `
+      <div class="quem">${quem}</div>
+      <div class="texto">${mensagem.content.replace(/\n/g, "<br>")}</div>
+    `;
+    
+    container.appendChild(item);
+  }
+}
